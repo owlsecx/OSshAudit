@@ -18,23 +18,20 @@
 
 ## 📌 Overview
 
-SSH configuration & exposure auditor (sshd_config, host keys, authorized_keys)
+
+OSshAudit is a defensive, read-only SSH configuration and exposure auditor that never attempts authentication and never modifies a file. It parses sshd_config (including Include globs and Match blocks), runs 40+ CIS/Mozilla-style hardening checks, inventories host keys and authorized_keys, and probes live SSH banners. Results are scored and graded per category, support baseline snapshots and regression diffs, and export to TXT, Markdown, JSON or CSV.
 
 ---
 
 ## ✨ Features
 
-- sshd_config parser — comments, quoting, Include globs and drop-in directories (sshd_config.d), first-value-wins semantics, Match block capture
-- Hardening evaluator — 40+ CIS / Mozilla-style checks (root login, passwords, PAM, empty passwords, ciphers, MACs, KEX, host-key algorithms, forwarding, ClientAlive*, MaxAuthTries, LoginGraceTime, Banner, LogLevel, AllowUsers/Groups, StrictModes, ...)
-- Weighted 0–100 score + A…F grade per category
-- Host key inventory — type, bits, SHA256 fingerprint (ssh-keygen -l or native parser), permission checks
-- authorized_keys auditor — key types, RSA bit length, comments, duplicates across users, options (from=, command=, no-*), file/dir/home permission risks
-- Client config audit — ssh_config + ~/.ssh/config (StrictHostKeyChecking, ForwardAgent, weak crypto)
-- Live banner probe — TCP connect + SSH identification string only (no auth, no brute force), version risk
-- Listening socket check — ss / netstat / /proc/net
-- Baseline snapshots (JSON) + regression diff
-- Export TXT / Markdown / JSON / CSV, save chooser, clipboard summary
-- Full CLI mode (--config, --keys, --auth-keys, ...)
+
+- sshd_config parser with Include globs, drop-in directories and first-value-wins semantics
+- 40+ CIS/Mozilla-style hardening checks (root login, passwords, ciphers, MACs, KEX, forwarding, timeouts)
+- Weighted 0-100 score with A..F grade per category
+- Host-key inventory (type, bits, SHA256 fingerprint) and authorized_keys auditor (types, options, duplicates)
+- Client-config audit plus a live banner probe (identification string only, no auth or brute force)
+- Baseline snapshots with regression diff and TXT/MD/JSON/CSV export
 
 ---
 
@@ -47,8 +44,13 @@ SSH configuration & exposure auditor (sshd_config, host keys, authorized_keys)
 
 ## 🚀 Usage
 
+
 ```bash
-./OSshAudit
+./OSshAudit --config /etc/ssh/sshd_config --format md -o ssh.md
+./OSshAudit --all --fix
+./OSshAudit --banner 10.0.0.5 --port 22
+./OSshAudit --save-baseline base.json
+./OSshAudit --help
 ```
 
 ---
